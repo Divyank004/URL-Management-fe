@@ -1,24 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Search, Trash2, RotateCcw, Plus, SquareCheckBig, Square } from 'lucide-react';
+import PopupModal from '../components/PopupModal';
 
 const URLTableApp = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState(new Set());
+  const [showAddURLModal, setshowAddURLModal] = useState(false);
 
   // TODO - fetch data from be
   const urlData = [
     {
       id: 1,
       url: 'https://example.com',
-      title: 'Example Website',
-      htmlVersion: 'HTML5',
-      internalLinks: 15,
-      externalLinks: 8,
-      inaccessibleLinks: 0,
+      title: null,
+      htmlVersion: null,
+      internalLinks: null,
+      externalLinks: null,
+      inaccessibleLinks: null,
       status: 'Queued',
-      loginForm: true
+      loginForm: null
     },
     {
       id: 2,
@@ -54,7 +56,7 @@ const URLTableApp = () => {
       loginForm: true
     }
   ];
-
+   
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -70,7 +72,7 @@ const URLTableApp = () => {
     };
     fetchData();
   }, []);
-
+   
   const filteredData = data.filter(item =>
     item.url.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -87,7 +89,11 @@ const URLTableApp = () => {
   };
 
   const selectAllRows = () => {
-    console.log('select all')
+     if (selectedRows.size === filteredData.length) {
+        setSelectedRows(new Set());
+      } else {
+        setSelectedRows(new Set(filteredData.map(item => item.id)));
+      }
   };
 
   const deleteSelectedRow = (id) => {
@@ -96,10 +102,6 @@ const URLTableApp = () => {
 
   const rerunURLAnalysis = (id) => {
     console.log(`Rerunning analysis for ID: ${id}`);
-  };
-
-  const addNewUrl = () => {
-    console.log('Add new URL');
   };
 
   const getStatusColor = (status) => {
@@ -157,7 +159,7 @@ const URLTableApp = () => {
                     className="text-gray-400 hover:text-gray-600"
                   >
                     {selectedRows.size === filteredData.length && filteredData.length > 0 ? (
-                      <CheckSquare className="h-5 w-5" />
+                      <SquareCheckBig className="h-5 w-5" />
                     ) : (
                       <Square className="h-5 w-5" />
                     )}
@@ -213,16 +215,16 @@ const URLTableApp = () => {
                     </a>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{item.title}</div>
+                    <div className="text-sm font-medium text-gray-900">{item.title || '-'}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">{item.htmlVersion}</div>
+                    <div className="text-sm text-gray-500">{item.htmlVersion || '-'}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{item.internalLinks}</div>
+                    <div className="text-sm text-gray-900">{item.internalLinks || '-'}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{item.externalLinks}</div>
+                    <div className="text-sm text-gray-900">{item.externalLinks || '-'}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(item.status)}`}>
@@ -268,7 +270,7 @@ const URLTableApp = () => {
               Showing {filteredData.length} of {data.length} URLs
             </p>
             <button
-              onClick={addNewUrl}
+              onClick={() => setshowAddURLModal(true)}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -276,6 +278,14 @@ const URLTableApp = () => {
             </button>
           </div>
         </div>
+
+        {/* AddURL Popup Modal */}
+        {showAddURLModal && (
+          <PopupModal
+            showAddURLModal={showAddURLModal}
+            onData={(newEntry) => setData(prev => [...prev, newEntry])}
+            onHandleCloseModal={() => setshowAddURLModal(false)}
+          />)}
       </div>
     </div>
   );
