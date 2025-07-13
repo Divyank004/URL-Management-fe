@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Search, Trash2, RotateCcw, Plus, SquareCheckBig, Square } from 'lucide-react';
-import PopupModal from '../components/PopupModal';
+import { Search, Trash2, RotateCcw} from 'lucide-react';
 import { useNavigate } from "react-router";
 import Table from '../components/Table';
 import { getStatusColor } from '../utils/getColorsCSS';
+import PopupModal from '../components/PopupModal'
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -49,6 +49,171 @@ const Dashboard = () => {
     },
     {
       id: 4,
+      url: 'https://reddit.com',
+      title: 'Reddit',
+      htmlVersion: 'HTML5',
+      internalLinks: 50,
+      externalLinks: 30,
+      inaccessibleLinks: 0,
+      status: 'Error',
+      loginForm: true
+    },
+    {
+      id: 5,
+      url: 'https://google.com',
+      title: 'Google Search',
+      htmlVersion: 'HTML5',
+      internalLinks: 25,
+      externalLinks: 12,
+      inaccessibleLinks: 10,
+      status: 'Running',
+      loginForm: true
+    },
+    {
+      id: 6,
+      url: 'https://stackoverflow.com',
+      title: 'Stack Overflow',
+      htmlVersion: 'HTML5',
+      internalLinks: 35,
+      externalLinks: 15,
+      inaccessibleLinks: 20,
+      status: 'Done',
+      loginForm: true
+    },
+    {
+      id: 7,
+      url: 'https://reddit.com',
+      title: 'Reddit',
+      htmlVersion: 'HTML5',
+      internalLinks: 50,
+      externalLinks: 30,
+      inaccessibleLinks: 0,
+      status: 'Error',
+      loginForm: true
+    },
+    {
+      id: 8,
+      url: 'https://google.com',
+      title: 'Google Search',
+      htmlVersion: 'HTML5',
+      internalLinks: 25,
+      externalLinks: 12,
+      inaccessibleLinks: 10,
+      status: 'Running',
+      loginForm: true
+    },
+    {
+      id: 9,
+      url: 'https://stackoverflow.com',
+      title: 'Stack Overflow',
+      htmlVersion: 'HTML5',
+      internalLinks: 35,
+      externalLinks: 15,
+      inaccessibleLinks: 20,
+      status: 'Done',
+      loginForm: true
+    },
+    {
+      id: 10,
+      url: 'https://reddit.com',
+      title: 'Reddit',
+      htmlVersion: 'HTML5',
+      internalLinks: 50,
+      externalLinks: 30,
+      inaccessibleLinks: 0,
+      status: 'Error',
+      loginForm: true
+    },
+    {
+      id: 11,
+      url: 'https://google.com',
+      title: 'Google Search',
+      htmlVersion: 'HTML5',
+      internalLinks: 25,
+      externalLinks: 12,
+      inaccessibleLinks: 10,
+      status: 'Running',
+      loginForm: true
+    },
+    {
+      id: 12,
+      url: 'https://stackoverflow.com',
+      title: 'Stack Overflow',
+      htmlVersion: 'HTML5',
+      internalLinks: 35,
+      externalLinks: 15,
+      inaccessibleLinks: 20,
+      status: 'Done',
+      loginForm: true
+    },
+    {
+      id: 13,
+      url: 'https://reddit.com',
+      title: 'Reddit',
+      htmlVersion: 'HTML5',
+      internalLinks: 50,
+      externalLinks: 30,
+      inaccessibleLinks: 0,
+      status: 'Error',
+      loginForm: true
+    },
+    {
+      id: 14,
+      url: 'https://google.com',
+      title: 'Google Search',
+      htmlVersion: 'HTML5',
+      internalLinks: 25,
+      externalLinks: 12,
+      inaccessibleLinks: 10,
+      status: 'Running',
+      loginForm: true
+    },
+    {
+      id: 15,
+      url: 'https://stackoverflow.com',
+      title: 'Stack Overflow',
+      htmlVersion: 'HTML5',
+      internalLinks: 35,
+      externalLinks: 15,
+      inaccessibleLinks: 20,
+      status: 'Done',
+      loginForm: true
+    },
+    {
+      id: 16,
+      url: 'https://reddit.com',
+      title: 'Reddit',
+      htmlVersion: 'HTML5',
+      internalLinks: 50,
+      externalLinks: 30,
+      inaccessibleLinks: 0,
+      status: 'Error',
+      loginForm: true
+    },
+    {
+      id: 17,
+      url: 'https://google.com',
+      title: 'Google Search',
+      htmlVersion: 'HTML5',
+      internalLinks: 25,
+      externalLinks: 12,
+      inaccessibleLinks: 10,
+      status: 'Running',
+      loginForm: true
+    },
+    {
+      id: 18,
+      url: 'https://stackoverflow.com',
+      title: 'Stack Overflow',
+      htmlVersion: 'HTML5',
+      internalLinks: 35,
+      externalLinks: 15,
+      inaccessibleLinks: 20,
+      status: 'Done',
+      loginForm: true
+    },
+    {
+      id: 19,
       url: 'https://reddit.com',
       title: 'Reddit',
       htmlVersion: 'HTML5',
@@ -209,7 +374,7 @@ const Dashboard = () => {
 
         {/* Table */}
         <Table
-          rows={data}
+          rows={filteredData}
           columns={columns}
           showCheckbox
           rowClicked={(row) => openDetailsPage(row)}
@@ -217,32 +382,17 @@ const Dashboard = () => {
             onDelete: deleteSelectedRow,
             onRerun: rerunURLAnalysis,
           }}
-        >
-        </Table>
-
-        {/* No Data */}
-        {filteredData.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500">No URLs found matching your search.</p>
-          </div>
-        )}
-
-        {/* Footer */}
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-          <div className="flex justify-between items-center">
-            <p className="text-sm text-gray-700">
-              Showing {filteredData.length} of {data.length} URLs
-            </p>
-            <button
-              onClick={() => setshowAddURLModal(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add new URL
-            </button>
-          </div>
-        </div>
-
+          pagination ={{ pageSizeOptions: [5, 10, 20], defaultPageSize: 10 }}
+          onData={(newEntry) => setData(prev => [...prev, newEntry])}
+          footer={{
+            buttonOne: 
+              {
+                title: 'Add new URL',
+                onAddUrl: () => setshowAddURLModal(true),
+                className: 'inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200'
+              }
+          }}
+        />
         {/* AddURL Popup Modal */}
         {showAddURLModal && (
           <PopupModal
