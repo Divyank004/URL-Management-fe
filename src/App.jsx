@@ -1,10 +1,10 @@
 import './App.css'
-import URLTableApp from './pages/URLTable'
+import Dashboard from './pages/Dashboard'
 
 function App() {
   return (
     <>
-      <URLTableApp/>
+      <Dashboard/>
     </>
   )
 }
