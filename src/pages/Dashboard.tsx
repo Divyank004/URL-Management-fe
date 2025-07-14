@@ -348,7 +348,7 @@ const Dashboard = () => {
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h1 className="text-2xl font-bold text-gray-900">URL Management</h1>
+            <h1 className="text-center text-2xl font-bold text-gray-900">URL Management</h1>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <input
@@ -379,7 +379,7 @@ const Dashboard = () => {
               {
                 title: 'Add new URL',
                 onAddUrl: () => setShowPopup(true),
-                className: 'inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200'
+                className: ''
               }
           }}
         />
