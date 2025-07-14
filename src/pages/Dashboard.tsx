@@ -5,6 +5,7 @@ import Table from '../components/Table';
 import { getStatusColor } from '../utils/getColorsCSS';
 import PopupModal from '../components/PopupModal'
 import type { URLAnalysisResult } from '../types';
+import type { TableColumn } from '../components/Table';
 
 const Dashboard = () => {
   const [data, setData] = useState<URLAnalysisResult[]>([]);
@@ -264,12 +265,6 @@ const Dashboard = () => {
   onDelete?: (id: number) => void;
   onRerun?: (id: number) => void;
   }
-  
-  interface TableColumn <T1, T2 = undefined> {
-  name: string;
-  label: string;
-  render?: (row: T1, rowActions: T2) => React.ReactNode;
-  }
 
   const columns: TableColumn<URLAnalysisResult, TableRowActionsContext>[] = [
     {
@@ -327,9 +322,7 @@ const Dashboard = () => {
     {
       name: 'actions',
       label: 'Actions',
-      render: (row, rowActions) => {
-        const { onDelete, onRerun } = rowActions || {};
-        return (
+      render: (row,  { onDelete, onRerun } ) => (
           <div className="flex space-x-2">
             <button
               onClick={(e) => {
@@ -353,7 +346,7 @@ const Dashboard = () => {
               Rerun
             </button>
           </div>
-        )},
+        ),
     },
   ]
 
@@ -392,6 +385,7 @@ const Dashboard = () => {
         <Table
           rows={filteredURLData}
           columns={columns}
+          unqieKeyInRows="id"
           showCheckbox
           rowClicked={(row) => openDetailsPage(row)}
           rowActions={{

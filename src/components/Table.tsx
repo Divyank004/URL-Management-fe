@@ -2,10 +2,36 @@ import { useState, useMemo } from 'react';
 import { SquareCheckBig, Square, ChevronLeft, ChevronRight  } from 'lucide-react';
 import isEmptyObject from '../utils/isEmptyObject';
 
-const Table = ({rows, columns, rowClicked, showCheckbox = false, rowActions = {}, pagination = {}, footer = {} }) => {
+export interface TableColumn <T1, T2 = undefined> {
+  name: string;
+  label: string;
+  render?: (row: T1, rowActions: T2) => React.ReactNode;
+}
+
+interface TableProps<T1, T2 = undefined> {
+  rows: T1[];
+  columns: TableColumn<T1, T2>[];
+  unqieKeyInRows: string;
+  rowClicked: (row: T1) => void;
+  showCheckbox?: boolean;
+  rowActions?: T2;
+  pagination?: {
+    defaultPageSize?: number;
+    pageSizeOptions: number[];
+  };
+  footer?: {
+    buttonOne: {
+      title: string;
+      className: string;
+      onAddUrl: () => void;
+    };
+  };
+}
+
+const Table = <T1, T2 = undefined>({rows, columns, unqieKeyInRows, rowClicked, showCheckbox = false, rowActions, pagination, footer }: TableProps<T1, T2>) => {
     const [selectedRows, setSelectedRows] = useState(new Set());
     const [pageIndex, setPageIndex] = useState(0);
-    const [pageSize, setPageSize] = useState(pagination.defaultPageSize ?? 10);
+    const [pageSize, setPageSize] = useState(pagination?.defaultPageSize ?? 10);
 
     const paginatedRows = useMemo(() => {
         if(!isEmptyObject(pagination)) {
@@ -22,7 +48,7 @@ const Table = ({rows, columns, rowClicked, showCheckbox = false, rowActions = {}
         if (selectedRows.size === rows.length) {
             setSelectedRows(new Set());
         } else {
-            setSelectedRows(new Set(rows.map(item => item.id)));
+            setSelectedRows(new Set(rows.map(item => item[unqieKeyInRows])));
         }
     };
     const rowSelected = (id) => {
@@ -62,19 +88,19 @@ const Table = ({rows, columns, rowClicked, showCheckbox = false, rowActions = {}
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                     {paginatedRows.map((item) => ( 
-                        <tr key={item.id} className="hover:bg-gray-50" onClick={() => rowClicked(item.id)}>                 
+                        <tr key={item[unqieKeyInRows]} className="hover:bg-gray-50" onClick={() => rowClicked(item[unqieKeyInRows])}>                 
                             {showCheckbox && (
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <button
                                         onClick={(e) => 
                                             {
                                                 e.stopPropagation()
-                                                rowSelected(item.id)
+                                                rowSelected(item[unqieKeyInRows])
                                             }
                                         }
                                         className="text-gray-400 hover:text-gray-600"
                                     >
-                                        {selectedRows.has(item.id) ? 
+                                        {selectedRows.has(item[unqieKeyInRows]) ? 
                                             (<SquareCheckBig className="h-5 w-5" />) : 
                                             (<Square className="h-5 w-5" />)
                                         }
@@ -83,7 +109,7 @@ const Table = ({rows, columns, rowClicked, showCheckbox = false, rowActions = {}
                             )}
                             {columns.map((col) => (
                                     <td key={col.name} className="px-6 py-4 whitespace-nowrap">
-                                        {col.render ? col.render(item, rowActions) : item[col.name]}
+                                        {col.render ? col.render(item, rowActions ?? ({} as T2)) : item[col.name]}
                                     </td>
                                 ))}
                         </tr>
@@ -143,7 +169,7 @@ const Table = ({rows, columns, rowClicked, showCheckbox = false, rowActions = {}
                                             }}
                                             className="border border-gray-300 rounded-md px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-500"
                                         >
-                                            {pagination.pageSizeOptions.map((size) => (
+                                            {pagination?.pageSizeOptions.map((size) => (
                                                 <option key={size} value={size}>
                                                     {size} rows
                                                 </option>
@@ -157,10 +183,10 @@ const Table = ({rows, columns, rowClicked, showCheckbox = false, rowActions = {}
                         {/* Action Button */}
                         {!isEmptyObject(footer) && (
                             <button
-                                onClick={() => footer.buttonOne.onAddUrl()}
-                                className={footer.buttonOne.className}
+                                onClick={() => footer?.buttonOne.onAddUrl()}
+                                className={footer?.buttonOne.className}
                             >
-                                {footer.buttonOne.title}
+                                {footer?.buttonOne.title}
                             </button>
                         )}
                     </div>
