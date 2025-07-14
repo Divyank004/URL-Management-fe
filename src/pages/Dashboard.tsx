@@ -23,7 +23,6 @@ const Dashboard = () => {
       htmlVersion: null,
       internalLinks: null,
       externalLinks: null,
-      inaccessibleLinks: null,
       status: 'Queued',
       loginForm: null
     },
@@ -34,7 +33,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 25,
       externalLinks: 12,
-      inaccessibleLinks: 10,
       status: 'Running',
       loginForm: true
     },
@@ -45,7 +43,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 35,
       externalLinks: 15,
-      inaccessibleLinks: 20,
       status: 'Done',
       loginForm: true
     },
@@ -56,7 +53,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 50,
       externalLinks: 30,
-      inaccessibleLinks: 0,
       status: 'Error',
       loginForm: true
     },
@@ -67,7 +63,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 25,
       externalLinks: 12,
-      inaccessibleLinks: 10,
       status: 'Running',
       loginForm: true
     },
@@ -78,7 +73,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 35,
       externalLinks: 15,
-      inaccessibleLinks: 20,
       status: 'Done',
       loginForm: true
     },
@@ -89,7 +83,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 50,
       externalLinks: 30,
-      inaccessibleLinks: 0,
       status: 'Error',
       loginForm: true
     },
@@ -100,7 +93,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 25,
       externalLinks: 12,
-      inaccessibleLinks: 10,
       status: 'Running',
       loginForm: true
     },
@@ -111,7 +103,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 35,
       externalLinks: 15,
-      inaccessibleLinks: 20,
       status: 'Done',
       loginForm: true
     },
@@ -122,7 +113,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 50,
       externalLinks: 30,
-      inaccessibleLinks: 0,
       status: 'Error',
       loginForm: true
     },
@@ -133,7 +123,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 25,
       externalLinks: 12,
-      inaccessibleLinks: 10,
       status: 'Running',
       loginForm: true
     },
@@ -144,7 +133,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 35,
       externalLinks: 15,
-      inaccessibleLinks: 20,
       status: 'Done',
       loginForm: true
     },
@@ -155,7 +143,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 50,
       externalLinks: 30,
-      inaccessibleLinks: 0,
       status: 'Error',
       loginForm: true
     },
@@ -166,7 +153,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 25,
       externalLinks: 12,
-      inaccessibleLinks: 10,
       status: 'Running',
       loginForm: true
     },
@@ -177,7 +163,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 35,
       externalLinks: 15,
-      inaccessibleLinks: 20,
       status: 'Done',
       loginForm: true
     },
@@ -188,7 +173,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 50,
       externalLinks: 30,
-      inaccessibleLinks: 0,
       status: 'Error',
       loginForm: true
     },
@@ -199,7 +183,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 25,
       externalLinks: 12,
-      inaccessibleLinks: 10,
       status: 'Running',
       loginForm: true
     },
@@ -210,7 +193,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 35,
       externalLinks: 15,
-      inaccessibleLinks: 20,
       status: 'Done',
       loginForm: true
     },
@@ -221,7 +203,6 @@ const Dashboard = () => {
       htmlVersion: 'HTML5',
       internalLinks: 50,
       externalLinks: 30,
-      inaccessibleLinks: 0,
       status: 'Error',
       loginForm: true
     }

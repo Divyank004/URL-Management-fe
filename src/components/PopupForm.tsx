@@ -6,6 +6,7 @@ interface PopupFormProps {
   onNewEntry: (newEntry: any) => void;
   onClosePopup: () => void;
 }
+
 const PopupForm = ({showPopup, onNewEntry, onClosePopup}: PopupFormProps) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const [newUrl, setNewUrl] = useState<string>('');
@@ -89,7 +90,7 @@ const PopupForm = ({showPopup, onNewEntry, onClosePopup}: PopupFormProps) => {
     }
   };
 
-  const validateUrl = (url) => {   
+  const validateUrl = (url: string) => {   
     try {
       const newUrl = new URL(url);
       if( newUrl.protocol === 'http:' || newUrl.protocol === 'https:'){

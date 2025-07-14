@@ -12,7 +12,7 @@ interface TableProps<T1, T2 = undefined> {
   rows: T1[];
   columns: TableColumn<T1, T2>[];
   unqieKeyInRows: string;
-  rowClicked: (row: T1) => void;
+  rowClicked?: (row: T1) => void;
   showCheckbox?: boolean;
   rowActions?: T2;
   pagination?: {
@@ -88,7 +88,7 @@ const Table = <T1, T2 = undefined>({rows, columns, unqieKeyInRows, rowClicked, s
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                     {paginatedRows.map((item) => ( 
-                        <tr key={item[unqieKeyInRows]} className="hover:bg-gray-50" onClick={() => rowClicked(item[unqieKeyInRows])}>                 
+                        <tr key={item[unqieKeyInRows]} className="hover:bg-gray-50" onClick={() => rowClicked && rowClicked(item[unqieKeyInRows])}>                 
                             {showCheckbox && (
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <button

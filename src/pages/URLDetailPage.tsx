@@ -3,10 +3,24 @@ import {ArrowLeft, ExternalLink} from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { getStatusCodeColor, getStatusColor } from '../utils/getColorsCSS';
 import Table from "../components/Table";
+import type { TableColumn } from "../components/Table";
+import type { URLAnalysisResult } from '../types';
+
+interface BrokenLink {
+  url: string;
+  statusCode: number;
+  type: 'internal' | 'external';
+}
+
+interface URLDataWithBrokenLink extends URLAnalysisResult {
+  brokenLinks: BrokenLink[];
+}
+
 const URLDetailPage = () => {
   const { id } = useParams();
-  const rowId = id - 1
-  const mockData = [
+  const rowId = id ? Number(id) - 1 : 0;
+  // TODO - Replace mock data with actual API call to fetch the clicked URL details
+  const mockData: URLDataWithBrokenLink[] = [
     {
       id: 1,
       url: 'https://example.com',
@@ -14,7 +28,7 @@ const URLDetailPage = () => {
       htmlVersion: 'HTML5',
       internalLinks: 15,
       externalLinks: 8,
-      status: 'Active',
+      status: 'Running',
       brokenLinks: [
         { url: 'https://example.com/broken-page', statusCode: 404, type: 'internal' },
         { url: 'https://external-site.com/missing', statusCode: 404, type: 'external' },
@@ -28,7 +42,7 @@ const URLDetailPage = () => {
       htmlVersion: 'HTML5',
       internalLinks: 25,
       externalLinks: 12,
-      status: 'Active',
+      status: 'Running',
       brokenLinks: [
         { url: 'https://google.com/broken', statusCode: 404, type: 'internal' },
         { url: 'https://partner-site.com/timeout', statusCode: 410, type: 'external' }
@@ -41,7 +55,7 @@ const URLDetailPage = () => {
       htmlVersion: 'HTML5',
       internalLinks: 35,
       externalLinks: 15,
-      status: 'Active',
+      status: 'Running',
       brokenLinks: [
         { url: 'https://stackoverflow.com/broken', statusCode: 404, type: 'internal' }
       ]
@@ -64,7 +78,7 @@ const URLDetailPage = () => {
     { name: 'Internal Links', value: mockData[rowId].internalLinks, color: '#10B981' },
     { name: 'External Links', value: mockData[rowId].externalLinks, color: '#3B82F6' },
   ]
-  const columns=[
+  const columns: TableColumn<BrokenLink>[] =[
     {
       name: 'url',
       label: 'URL',
@@ -146,7 +160,7 @@ const URLDetailPage = () => {
                     cy="50%"
                     outerRadius={80}
                     dataKey="value"
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) => `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
                   >
                     {pieData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
@@ -190,6 +204,7 @@ const URLDetailPage = () => {
             <Table
               rows={mockData[rowId].brokenLinks}
               columns={columns}
+              unqieKeyInRows="url"
             >
             </Table>
             {mockData[rowId].brokenLinks.length === 0 && (

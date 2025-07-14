@@ -5,7 +5,6 @@ export interface URLAnalysisResult {
     htmlVersion: string | null;
     internalLinks: number | null;
     externalLinks: number | null;
-    inaccessibleLinks: number | null;
     status: 'Queued' | 'Running' | 'Done' | 'Error';
-    loginForm: boolean | null;
+    loginForm?: boolean | null;
 };
