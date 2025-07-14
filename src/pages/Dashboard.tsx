@@ -3,7 +3,7 @@ import { Search, Trash2, RotateCcw} from 'lucide-react';
 import { useNavigate } from "react-router";
 import Table from '../components/Table';
 import { getStatusColor } from '../utils/getColorsCSS';
-import PopupModal from '../components/PopupModal'
+import PopupForm from '../components/PopupForm'
 import type { URLAnalysisResult } from '../types';
 import type { TableColumn } from '../components/Table';
 
@@ -11,7 +11,7 @@ const Dashboard = () => {
   const [data, setData] = useState<URLAnalysisResult[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [showAddURLModal, setshowAddURLModal] = useState<boolean>(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
   const navigate = useNavigate();
   
   // TODO - fetch data from be
@@ -397,17 +397,17 @@ const Dashboard = () => {
             buttonOne: 
               {
                 title: 'Add new URL',
-                onAddUrl: () => setshowAddURLModal(true),
+                onAddUrl: () => setShowPopup(true),
                 className: 'inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200'
               }
           }}
         />
         {/* AddURL Popup Modal */}
-        {showAddURLModal && (
-          <PopupModal
-            showAddURLModal={showAddURLModal}
-            onData={(newEntry) => setData(prev => [newEntry, ...prev])}
-            onHandleCloseModal={() => setshowAddURLModal(false)}
+        {showPopup && (
+          <PopupForm
+            showPopup={showPopup}
+            onNewEntry={(newEntry) => setData(prev => [newEntry, ...prev])}
+            onClosePopup={() => setShowPopup(false)}
           />
         )}
       </div>

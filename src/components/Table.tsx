@@ -29,9 +29,9 @@ interface TableProps<T1, T2 = undefined> {
 }
 
 const Table = <T1, T2 = undefined>({rows, columns, unqieKeyInRows, rowClicked, showCheckbox = false, rowActions, pagination, footer }: TableProps<T1, T2>) => {
-    const [selectedRows, setSelectedRows] = useState(new Set());
-    const [pageIndex, setPageIndex] = useState(0);
-    const [pageSize, setPageSize] = useState(pagination?.defaultPageSize ?? 10);
+    const [selectedRows, setSelectedRows] = useState<Set<T1>>(new Set());
+    const [pageIndex, setPageIndex] = useState<number>(0);
+    const [pageSize, setPageSize] = useState<number>(pagination?.defaultPageSize ?? 10);
 
     const paginatedRows = useMemo(() => {
         if(!isEmptyObject(pagination)) {
