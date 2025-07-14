@@ -1,9 +1,11 @@
 import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
+import { StrictMode } from 'react'
+import App from './App.js'
 import { BrowserRouter, Routes, Route } from "react-router";
-import URLDetailPage from './pages/URLDetailPage.jsx';
+import URLDetailPage from './pages/URLDetailPage';
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
   <BrowserRouter>
     <Routes>
       <Route path="/">
@@ -11,5 +13,6 @@ createRoot(document.getElementById('root')).render(
         <Route path="/url/:id" element={<URLDetailPage/>} />
       </Route>
     </Routes>
-  </BrowserRouter>,
+  </BrowserRouter>
+  </StrictMode>,
 )

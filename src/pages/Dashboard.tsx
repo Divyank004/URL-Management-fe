@@ -4,16 +4,17 @@ import { useNavigate } from "react-router";
 import Table from '../components/Table';
 import { getStatusColor } from '../utils/getColorsCSS';
 import PopupModal from '../components/PopupModal'
+import type { URLAnalysisResult } from '../types';
 
 const Dashboard = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showAddURLModal, setshowAddURLModal] = useState(false);
+  const [data, setData] = useState<URLAnalysisResult[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [showAddURLModal, setshowAddURLModal] = useState<boolean>(false);
   const navigate = useNavigate();
   
   // TODO - fetch data from be
-  const urlData = [
+  const urlData: URLAnalysisResult[] = [
     {
       id: 1,
       url: 'https://example.com',
@@ -241,7 +242,7 @@ const Dashboard = () => {
     fetchData();
   }, []);
    
-  const filteredData = data.filter(item =>
+  const filteredURLData: URLAnalysisResult[] = data.filter(item =>
     item.url.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -258,7 +259,19 @@ const Dashboard = () => {
     console.log('item', item)
     navigate(`/url/${ item}`);
   }
-  const columns=[
+  
+  interface TableRowActionsContext {
+  onDelete?: (id: number) => void;
+  onRerun?: (id: number) => void;
+  }
+  
+  interface TableColumn <T1, T2 = undefined> {
+  name: string;
+  label: string;
+  render?: (row: T1, rowActions: T2) => React.ReactNode;
+  }
+
+  const columns: TableColumn<URLAnalysisResult, TableRowActionsContext>[] = [
     {
       name: 'url',
       label: 'URL',
@@ -278,28 +291,28 @@ const Dashboard = () => {
       name: 'title',
       label: 'Titles',
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">{row.title || '-'}</div>
+        <div className="text-sm font-medium text-gray-900">{row.title ?? '-'}</div>
       ),
     },
     {
       name: 'htmlVersion',
       label: 'HTML Version',
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">{row.htmlVersion || '-'}</div>
+        <div className="text-sm font-medium text-gray-900">{row.htmlVersion ?? '-'}</div>
       ),
     },
     {
       name: 'internalLinks',
       label: 'Internal Links',
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">{row.internalLinks || '-'}</div>
+        <div className="text-sm font-medium text-gray-900">{row.internalLinks ?? '-'}</div>
       ),
     },
     {
       name: 'externalLinks',
       label: 'External Links',
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">{row.externalLinks || '-'}</div>
+        <div className="text-sm font-medium text-gray-900">{row.externalLinks ?? '-'}</div>
       ),
     },
     {
@@ -314,33 +327,36 @@ const Dashboard = () => {
     {
       name: 'actions',
       label: 'Actions',
-      render: (row, { onDelete, onRerun }) => (
-        <div className="flex space-x-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete?.(row.id);
-            }}
-            className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
-            title="Delete"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onRerun?.(row.id);
-            }}
-            className="text-blue-600 hover:text-blue-800 px-3 py-1 text-sm border border-blue-600 rounded hover:bg-blue-50"
-            title='Rerun'
-          >
-            <RotateCcw className="h-4 w-4 inline mr-1" />
-            Rerun
-          </button>
-        </div>
-      ),
+      render: (row, rowActions) => {
+        const { onDelete, onRerun } = rowActions || {};
+        return (
+          <div className="flex space-x-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete?.(row.id);
+              }}
+              className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
+              title="Delete"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onRerun?.(row.id);
+              }}
+              className="text-blue-600 hover:text-blue-800 px-3 py-1 text-sm border border-blue-600 rounded hover:bg-blue-50"
+              title='Rerun'
+            >
+              <RotateCcw className="h-4 w-4 inline mr-1" />
+              Rerun
+            </button>
+          </div>
+        )},
     },
   ]
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -374,16 +390,15 @@ const Dashboard = () => {
 
         {/* Table */}
         <Table
-          rows={filteredData}
+          rows={filteredURLData}
           columns={columns}
           showCheckbox
           rowClicked={(row) => openDetailsPage(row)}
-          actions={{
+          rowActions={{
             onDelete: deleteSelectedRow,
             onRerun: rerunURLAnalysis,
           }}
           pagination ={{ pageSizeOptions: [5, 10, 20], defaultPageSize: 10 }}
-          onData={(newEntry) => setData(prev => [...prev, newEntry])}
           footer={{
             buttonOne: 
               {
@@ -397,9 +412,10 @@ const Dashboard = () => {
         {showAddURLModal && (
           <PopupModal
             showAddURLModal={showAddURLModal}
-            onData={(newEntry) => setData(prev => [...prev, newEntry])}
+            onData={(newEntry) => setData(prev => [newEntry, ...prev])}
             onHandleCloseModal={() => setshowAddURLModal(false)}
-          />)}
+          />
+        )}
       </div>
     </div>
   );
