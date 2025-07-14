@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { SquareCheckBig, Square, ChevronLeft, ChevronRight  } from 'lucide-react';
-import isEmptyObject from '../utils/isEmptyObject';
+import isObjNullOrUndefined from '../utils/isObjNullOrUndefined';
 
 export interface TableColumn <T1, T2 = undefined> {
   name: string;
@@ -34,7 +34,7 @@ const Table = <T1, T2 = undefined>({rows, columns, unqieKeyInRows, rowClicked, s
     const [pageSize, setPageSize] = useState<number>(pagination?.defaultPageSize ?? 10);
 
     const paginatedRows = useMemo(() => {
-        if(!isEmptyObject(pagination)) {
+        if(!isObjNullOrUndefined(pagination)) {
             const start = pageIndex * pageSize;
             return rows.slice(start, start + pageSize);
         }  else {
@@ -123,10 +123,10 @@ const Table = <T1, T2 = undefined>({rows, columns, unqieKeyInRows, rowClicked, s
                 </div>
             )}
             {/* Footer */}
-            {!isEmptyObject(pagination) && !isEmptyObject(footer) && (
+            {!isObjNullOrUndefined(pagination) && !isObjNullOrUndefined(footer) && (
                 <div className="px-6 py-4 bg-white border-t border-gray-200 shadow-sm">
                     <div className="flex justify-between items-center">
-                        {!isEmptyObject(pagination) && (
+                        {!isObjNullOrUndefined(pagination) && (
                             <div className="flex items-center space-x-4">
                                 {/* Page Navigation */}
                                 <div className="flex items-center space-x-2">
@@ -181,7 +181,7 @@ const Table = <T1, T2 = undefined>({rows, columns, unqieKeyInRows, rowClicked, s
                         )}
 
                         {/* Action Button */}
-                        {!isEmptyObject(footer) && (
+                        {!isObjNullOrUndefined(footer) && (
                             <button
                                 onClick={() => footer?.buttonOne.onAddUrl()}
                                 className={footer?.buttonOne.className}
