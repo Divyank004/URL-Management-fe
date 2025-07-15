@@ -69,13 +69,8 @@ const PopupForm = ({showPopup, onNewEntry, onClosePopup}: PopupFormProps) => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       const newEntry = {
-        id: Date.now(),
         url: validation.url,
-        title: 'Analyzing...',
-        htmlVersion: 'Pending',
-        internalLinks: 0,
-        externalLinks: 0,
-        status: 'Processing'
+        status: 'Queued',
       };
 
       // add to table rows

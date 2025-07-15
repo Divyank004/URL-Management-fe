@@ -6,7 +6,7 @@ import { getStatusColor } from '../utils/getColorsCSS';
 import PopupForm from '../components/PopupForm'
 import type { URLAnalysisResult } from '../types';
 import type { TableColumn } from '../components/Table';
-import { fetchURLAnalysisData } from '../api/services';
+import { postNewUrl, fetchAllURLsAnalysisData } from '../api/services';
 
 const Dashboard = () => {
   const [data, setData] = useState<URLAnalysisResult[]>([]);
@@ -19,7 +19,7 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         setLoading(true); 
-        const response = await fetchURLAnalysisData();
+        const response = await fetchAllURLsAnalysisData();
         const urlData: URLAnalysisResult[] = response.ok ? await response.json() : [];
         setData(urlData);
       } catch (error) {
@@ -44,9 +44,13 @@ const Dashboard = () => {
     console.log(`Rerunning analysis for ID: ${id}`);
   };
 
-  const openDetailsPage = (item) => {
-    console.log('item', item)
-    navigate(`/url/${ item}`);
+  const openDetailsPage = (id: string) => {
+    const item = data.find((entry) => entry.id === Number(id));
+    if (item && item.status === 'Done') {
+      navigate(`/url/${id}`);
+    } else {
+      alert('Analysis is not complete yet. Please wait until it is done.');
+    } 
   }
   
   interface TableRowActionsContext {
@@ -72,16 +76,16 @@ const Dashboard = () => {
     },
     {
       name: 'title',
-      label: 'Titles',
+      label: 'Title',
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">{row.title ?? '-'}</div>
+        <div className="text-sm font-medium text-gray-900">{row.title || '-'}</div>
       ),
     },
     {
       name: 'htmlVersion',
       label: 'HTML Version',
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">{row.htmlVersion ?? '-'}</div>
+        <div className="text-sm font-medium text-gray-900">{row.htmlVersion || '-'}</div>
       ),
     },
     {
@@ -149,6 +153,22 @@ const Dashboard = () => {
     );
   }
 
+  async function addURL(newEntry: URLAnalysisResult) {
+    try{
+      const response = await postNewUrl(newEntry);
+      if (response.ok) {
+        const addedUrl: URLAnalysisResult = await response.json();
+        setData((prevData) => [addedUrl, ...prevData]);
+      } else {
+        alert('Failed to add new URL');
+      }
+    }
+    catch (error) {
+      console.error('Error adding new URL:', error);
+      alert('Error adding new URL');
+    }
+  }
+  
   return (
     <div className="min-h-full bg-white-150 py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 ">
@@ -194,7 +214,7 @@ const Dashboard = () => {
         {showPopup && (
           <PopupForm
             showPopup={showPopup}
-            onNewEntry={(newEntry) => setData(prev => [newEntry, ...prev])}
+            onNewEntry={(newEntry) => addURL(newEntry)}
             onClosePopup={() => setShowPopup(false)}
           />
         )}

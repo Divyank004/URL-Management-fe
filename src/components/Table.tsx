@@ -12,7 +12,7 @@ interface TableProps<T1, T2 = undefined> {
   rows: T1[];
   columns: TableColumn<T1, T2>[];
   unqieKeyInRows: string;
-  rowClicked?: (row: T1) => void;
+  rowClicked?: (uniqueKeyInRow: string) => void;
   showCheckbox?: boolean;
   rowActions?: T2;
   pagination?: {

@@ -5,6 +5,8 @@ import { getStatusCodeColor, getStatusColor } from '../utils/getColorsCSS';
 import Table from "../components/Table";
 import type { TableColumn } from "../components/Table";
 import type { URLAnalysisResult } from '../types';
+import { fetchSingleURLAnalysisData } from '../api/services';
+import { useEffect, useState } from 'react';
 
 interface BrokenLink {
   url: string;
@@ -18,66 +20,26 @@ interface URLDataWithBrokenLink extends URLAnalysisResult {
 
 const URLDetailPage = () => {
   const { id } = useParams();
-  const rowId = id ? Number(id) - 1 : 0;
-  // TODO - Replace mock data with actual API call to fetch the clicked URL details
-  const mockData: URLDataWithBrokenLink[] = [
-    {
-      id: 1,
-      url: 'https://example.com',
-      title: 'Example Website',
-      htmlVersion: 'HTML5',
-      internalLinks: 15,
-      externalLinks: 8,
-      status: 'Running',
-      brokenLinks: [
-        { url: 'https://example.com/broken-page', statusCode: 404, type: 'internal' },
-        { url: 'https://external-site.com/missing', statusCode: 404, type: 'external' },
-        { url: 'https://example.com/timeout', statusCode: 408, type: 'internal' }
-      ]
-    },
-    {
-      id: 2,
-      url: 'https://google.com',
-      title: 'Google Search',
-      htmlVersion: 'HTML5',
-      internalLinks: 25,
-      externalLinks: 12,
-      status: 'Running',
-      brokenLinks: [
-        { url: 'https://google.com/broken', statusCode: 404, type: 'internal' },
-        { url: 'https://partner-site.com/timeout', statusCode: 410, type: 'external' }
-      ]
-    },
-    {
-      id: 3,
-      url: 'https://stackoverflow.com',
-      title: 'Stack Overflow',
-      htmlVersion: 'HTML5',
-      internalLinks: 35,
-      externalLinks: 15,
-      status: 'Running',
-      brokenLinks: [
-        { url: 'https://stackoverflow.com/broken', statusCode: 404, type: 'internal' }
-      ]
-    },
-    {
-      id: 4,
-      url: 'https://reddit.com',
-      title: 'Reddit',
-      htmlVersion: 'HTML5',
-      internalLinks: 50,
-      externalLinks: 30,
-      status: 'Error',
-      brokenLinks: [
-        { url: 'https://reddit.com/r/deleted', statusCode: 404, type: 'internal' },
-        { url: 'https://external.com/image.jpg', statusCode: 404, type: 'external' },
-      ]
-    }
-  ];
-  const pieData = [
-    { name: 'Internal Links', value: mockData[rowId].internalLinks, color: '#10B981' },
-    { name: 'External Links', value: mockData[rowId].externalLinks, color: '#3B82F6' },
-  ]
+  const [data, setData] = useState<URLDataWithBrokenLink>();
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+      const fetchData = async () => {
+        try { 
+          setLoading(true); 
+          const response = await fetchSingleURLAnalysisData(Number(id));
+          const urlData: URLDataWithBrokenLink = response.ok ? await response.json() : [];
+          setData(urlData);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }, []);
+  
+  
   const columns: TableColumn<BrokenLink>[] =[
     {
       name: 'url',
@@ -115,8 +77,21 @@ const URLDetailPage = () => {
       ),
     },
   ]
-
-  return (
+  if (loading && !data) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+  const pieData = [
+    { name: 'Internal Links', value: data?.internalLinks, color: '#10B981' },
+    { name: 'External Links', value: data?.externalLinks, color: '#3B82F6' },
+  ]
+  return data && (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -125,24 +100,24 @@ const URLDetailPage = () => {
             className="flex items-center text-blue-600 hover:text-blue-800 mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            <Link to="/">Back to Table</Link>
+            <Link to="/dashboard">Back to Table</Link>
           </button>
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">{mockData[rowId].title}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">{data.title}</h1>
             <a
-              href={mockData[rowId].url}
+              href={data.url}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-800 hover:underline flex items-center"
             >
-              {mockData[rowId].url}
+              {data.url}
               <ExternalLink className="h-4 w-4 ml-1" />
             </a>
             <div className="mt-4 flex items-center space-x-4">
-              <span className={`px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(mockData[rowId].status)}`}>
-                {mockData[rowId].status}
+              <span className={`px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(data.status)}`}>
+                {data.status}
               </span>
-              <span className="text-sm text-gray-500">HTML Version: {mockData[rowId].htmlVersion}</span>
+              <span className="text-sm text-gray-500">HTML Version: {data.htmlVersion}</span>
             </div>
           </div>
         </div>
@@ -176,19 +151,19 @@ const URLDetailPage = () => {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Total Internal Links</span>
-                <span className="font-semibold text-gray-900">{mockData[rowId].internalLinks}</span>
+                <span className="font-semibold text-gray-900">{data.internalLinks}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Total External Links</span>
-                <span className="font-semibold text-gray-900">{mockData[rowId].externalLinks}</span>
+                <span className="font-semibold text-gray-900">{data.externalLinks}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Broken Internal Links</span>
-                <span className="font-semibold text-red-600">{mockData[rowId].brokenLinks.filter(item => item.type === 'internal').length}</span>
+                <span className="font-semibold text-red-600">{data.brokenLinks.filter(item => item.type === 'internal').length}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">Broken External Links</span>
-                <span className="font-semibold text-red-600">{mockData[rowId].brokenLinks.filter(item => item.type === 'external').length}</span>
+                <span className="font-semibold text-red-600">{data.brokenLinks.filter(item => item.type === 'external').length}</span>
               </div>
              
             </div>
@@ -202,12 +177,12 @@ const URLDetailPage = () => {
           </div>
           <div className="overflow-auto">
             <Table
-              rows={mockData[rowId].brokenLinks}
+              rows={data.brokenLinks}
               columns={columns}
               unqieKeyInRows="url"
             >
             </Table>
-            {mockData[rowId].brokenLinks.length === 0 && (
+            {data.brokenLinks.length === 0 && (
               <div className="text-center py-12">
                 <p className="text-gray-500">No broken links found.</p>
               </div>
@@ -215,9 +190,7 @@ const URLDetailPage = () => {
           </div>
         </div>
       </div>
-    </div>
-
-  );
+    </div>);
 };
 
 export default URLDetailPage;
