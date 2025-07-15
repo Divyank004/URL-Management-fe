@@ -179,21 +179,19 @@ const URLDetailPage = () => {
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Broken Internal Links</span>
                   <span className="font-semibold text-red-600">
-                    {
+                    {data.brokenLinks &&
                       data.brokenLinks.filter(
                         (item) => item.type === "internal",
-                      ).length
-                    }
+                      ).length}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Broken External Links</span>
                   <span className="font-semibold text-red-600">
-                    {
+                    {data.brokenLinks &&
                       data.brokenLinks.filter(
                         (item) => item.type === "external",
-                      ).length
-                    }
+                      ).length}
                   </span>
                 </div>
               </div>
@@ -209,11 +207,11 @@ const URLDetailPage = () => {
             </div>
             <div className="overflow-auto">
               <Table
-                rows={data.brokenLinks}
+                rows={data.brokenLinks || []}
                 columns={columns}
                 unqieKeyInRows="url"
               ></Table>
-              {data.brokenLinks.length === 0 && (
+              {data.brokenLinks && data.brokenLinks.length === 0 && (
                 <div className="text-center py-12">
                   <p className="text-gray-500">No broken links found.</p>
                 </div>

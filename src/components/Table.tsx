@@ -34,7 +34,7 @@ interface TableProps<T1, T2 = undefined> {
 }
 
 const Table = <T1, T2 = undefined>({
-  rows,
+  rows = [],
   columns,
   unqieKeyInRows,
   rowClicked,
