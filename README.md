@@ -1,12 +1,42 @@
-# React + Vite
+# URL Management
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An app where the user can login, add urls, view the urls in a table and run analysis on the url and view the analysis in a detailed view.
 
-Currently, two official plugins are available:
+Userflow:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- The user logs in
+- Once logged in user can view list of urls with respective data in a table
+- User can add new URLs to the table
+- When Url is added a request is sent to the backend to run analysis on the URL.
+- When the analysis is done the URL info is updated in the table automatically using polling mechanism
+- User can also rerun analysis by clicking rerun button in the url specific row
+- User can click on a specific row of a url to go to detailed page
+- The url detail page contains Pie chart comparing internal and external links, a table showing number of internal, external links and another table showing list of broken links with the error status code.
 
-## Expanding the ESLint configuration
+## Install the dependencies
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+yarn
+# or
+npm install
+```
+
+### Start the app in development mode (hot-code reloading, error reporting, etc.)
+
+```bash
+npm run dev
+```
+
+### Lint the files
+
+```bash
+yarn lint
+# or
+npm run lint
+```
+
+### Build the app for production
+
+```bash
+npm run build
+```
