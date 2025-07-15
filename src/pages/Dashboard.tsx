@@ -1,33 +1,34 @@
-import { useState, useEffect } from 'react';
-import { Search, Trash2, RotateCcw} from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Search, Trash2, RotateCcw } from "lucide-react";
 import { useNavigate } from "react-router";
-import Table from '../components/Table';
-import { getStatusColor } from '../utils/getColorsCSS';
-import PopupForm from '../components/PopupForm'
-import type { URLAnalysisResult } from '../types';
-import type { TableColumn } from '../components/Table';
-import { postNewUrl, fetchAllURLsAnalysisData } from '../api/services';
-import { getURLAnalysisResult, reRunAnalysis } from '../api/services';
-
+import Table from "../components/Table";
+import { getStatusColor } from "../utils/getColorsCSS";
+import PopupForm from "../components/PopupForm";
+import type { URLAnalysisResult } from "../types";
+import type { TableColumn } from "../components/Table";
+import { postNewUrl, fetchAllURLsAnalysisData } from "../api/services";
+import { getURLAnalysisResult, reRunAnalysis } from "../api/services";
 
 const Dashboard = () => {
   const [data, setData] = useState<URLAnalysisResult[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [jobId, setJobId] = useState<string | null>(null);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true); 
+        setLoading(true);
         const response = await fetchAllURLsAnalysisData();
-        const urlData: URLAnalysisResult[] = response.ok ? await response.json() : [];
+        const urlData: URLAnalysisResult[] = response.ok
+          ? await response.json()
+          : [];
         setData(urlData);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -38,65 +39,70 @@ const Dashboard = () => {
       return () => clearInterval(interval);
     }
   }, [jobId]);
-   
-  const filteredURLData: URLAnalysisResult[] = data.filter(item =>
-    item.url.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.title?.toLowerCase().includes(searchTerm.toLowerCase())
+
+  const filteredURLData: URLAnalysisResult[] = data.filter(
+    (item) =>
+      item.url.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.title?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const deleteSelectedRow = (id) => {
-    console.log('delete id', id)
+    console.log("delete id", id);
   };
 
   const rerunURLAnalysis = async (id: number) => {
     console.log(`Rerunning analysis for ID: ${id}`);
-    try{
+    try {
       const response = await reRunAnalysis(id.toString());
       if (response.ok) {
         setJobId(id.toString());
-        alert('Analysis rerun initiated successfully.');
+        alert("Analysis rerun initiated successfully.");
       } else {
-        alert('Failed to rerun analysis. Please try again later.');
+        alert("Failed to rerun analysis. Please try again later.");
       }
     } catch (error) {
-      console.error('Error rerunning analysis:', error);
-      alert('Error rerunning analysis');
+      console.error("Error rerunning analysis:", error);
+      alert("Error rerunning analysis");
     }
   };
 
   const openDetailsPage = (id: string) => {
     const item = data.find((entry) => entry.id === Number(id));
-    if (item && item.status === 'Done') {
+    if (item && item.status === "Done") {
       navigate(`/url/${id}`);
     } else {
-      alert('Analysis is not complete yet. Please wait until it is done.');
-    } 
-  }
+      alert("Analysis is not complete yet. Please wait until it is done.");
+    }
+  };
 
-const pollResult = async () => {
+  const pollResult = async () => {
     if (!jobId) return;
     try {
       const response = await getURLAnalysisResult(jobId);
       if (!response.ok) {
-        throw new Error('Failed to fetch result');
+        throw new Error("Failed to fetch result");
       }
       const data = await response.json();
-      
-      if(data.status === 'Running') {
-        console.log('Analysis in progress:', data);
-        setData((prevData) => prevData.map(item => item.id === Number(jobId) ? data : item));
+
+      if (data.status === "Running") {
+        console.log("Analysis in progress:", data);
+        setData((prevData) =>
+          prevData.map((item) => (item.id === Number(jobId) ? data : item)),
+        );
         return;
       }
-      
-      if (data.status === 'Done' || data.status === 'Failed') {
-        console.log('Polling result:', data);
-        setData((prevData) => prevData.map(item => item.id === Number(jobId) ? data : item));
-        console.log('polling completed:', data);
+
+      if (data.status === "Done" || data.status === "Failed") {
+        console.log("Polling result:", data);
+        setData((prevData) =>
+          prevData.map((item) => (item.id === Number(jobId) ? data : item)),
+        );
+        console.log("polling completed:", data);
         // Stop polling if job is done or failed
         setJobId(null);
       }
     } catch (err) {
-      throw new Error('Failed to fetch result', err);
+      throw new Error("Failed to fetch result", err);
     }
   };
 
@@ -107,8 +113,8 @@ const pollResult = async () => {
 
   const columns: TableColumn<URLAnalysisResult, TableRowActionsContext>[] = [
     {
-      name: 'url',
-      label: 'URL',
+      name: "url",
+      label: "URL",
       render: (row) => (
         <a
           href={row.url}
@@ -122,72 +128,82 @@ const pollResult = async () => {
       ),
     },
     {
-      name: 'title',
-      label: 'Title',
+      name: "title",
+      label: "Title",
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">{row.title || '-'}</div>
+        <div className="text-sm font-medium text-gray-900">
+          {row.title || "-"}
+        </div>
       ),
     },
     {
-      name: 'htmlVersion',
-      label: 'HTML Version',
+      name: "htmlVersion",
+      label: "HTML Version",
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">{row.htmlVersion || '-'}</div>
+        <div className="text-sm font-medium text-gray-900">
+          {row.htmlVersion || "-"}
+        </div>
       ),
     },
     {
-      name: 'internalLinks',
-      label: 'Internal Links',
+      name: "internalLinks",
+      label: "Internal Links",
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">{row.internalLinks ?? '-'}</div>
+        <div className="text-sm font-medium text-gray-900">
+          {row.internalLinks ?? "-"}
+        </div>
       ),
     },
     {
-      name: 'externalLinks',
-      label: 'External Links',
+      name: "externalLinks",
+      label: "External Links",
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">{row.externalLinks ?? '-'}</div>
+        <div className="text-sm font-medium text-gray-900">
+          {row.externalLinks ?? "-"}
+        </div>
       ),
     },
     {
-      name: 'status',
-      label: 'Status',
+      name: "status",
+      label: "Status",
       render: (row) => (
-        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(row.status)}`}>
+        <span
+          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(row.status)}`}
+        >
           {row.status}
         </span>
       ),
     },
     {
-      name: 'actions',
-      label: 'Actions',
-      render: (row,  { onDelete, onRerun } ) => (
-          <div className="flex space-x-2">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete?.(row.id);
-              }}
-              className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
-              title="Delete"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onRerun?.(row.id);
-              }}
-              className="text-blue-600 hover:text-blue-800 px-3 py-1 text-sm border border-blue-600 rounded hover:bg-blue-50"
-              title='Rerun'
-            >
-              <RotateCcw className="h-4 w-4 inline mr-1" />
-              Rerun
-            </button>
-          </div>
-        ),
+      name: "actions",
+      label: "Actions",
+      render: (row, { onDelete, onRerun }) => (
+        <div className="flex space-x-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete?.(row.id);
+            }}
+            className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
+            title="Delete"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onRerun?.(row.id);
+            }}
+            className="text-blue-600 hover:text-blue-800 px-3 py-1 text-sm border border-blue-600 rounded hover:bg-blue-50"
+            title="Rerun"
+          >
+            <RotateCcw className="h-4 w-4 inline mr-1" />
+            Rerun
+          </button>
+        </div>
+      ),
     },
-  ]
+  ];
 
   if (loading) {
     return (
@@ -201,7 +217,7 @@ const pollResult = async () => {
   }
 
   async function addURL(newEntry: URLAnalysisResult) {
-    try{
+    try {
       const response = await postNewUrl(newEntry);
       if (response.ok) {
         const addedUrl: URLAnalysisResult = await response.json();
@@ -209,22 +225,23 @@ const pollResult = async () => {
         // trigger polling for the url analysis
         setJobId(addedUrl.id.toString());
       } else {
-        alert('Failed to add new URL');
+        alert("Failed to add new URL");
       }
-    }
-    catch (error) {
-      console.error('Error adding new URL:', error);
-      alert('Error adding new URL');
+    } catch (error) {
+      console.error("Error adding new URL:", error);
+      alert("Error adding new URL");
     }
   }
-  
+
   return (
     <div className="min-h-full bg-white-150 py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 ">
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h1 className="text-center text-2xl font-bold text-gray-900">URL Management</h1>
+            <h1 className="text-center text-2xl font-bold text-gray-900">
+              URL Management
+            </h1>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <input
@@ -249,14 +266,13 @@ const pollResult = async () => {
             onDelete: deleteSelectedRow,
             onRerun: rerunURLAnalysis,
           }}
-          pagination ={{ pageSizeOptions: [5, 10, 20], defaultPageSize: 10 }}
+          pagination={{ pageSizeOptions: [5, 10, 20], defaultPageSize: 10 }}
           footer={{
-            buttonOne: 
-              {
-                title: 'Add new URL',
-                onAddUrl: () => setShowPopup(true),
-                className: ''
-              }
+            buttonOne: {
+              title: "Add new URL",
+              onAddUrl: () => setShowPopup(true),
+              className: "",
+            },
           }}
         />
         {/* AddURL Popup Modal */}

@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { X, AlertTriangle } from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import { X, AlertTriangle } from "lucide-react";
 
 interface PopupFormProps {
   showPopup: boolean;
@@ -7,18 +7,18 @@ interface PopupFormProps {
   onClosePopup: () => void;
 }
 
-const PopupForm = ({showPopup, onNewEntry, onClosePopup}: PopupFormProps) => {
+const PopupForm = ({ showPopup, onNewEntry, onClosePopup }: PopupFormProps) => {
   const popupRef = useRef<HTMLDivElement>(null);
-  const [newUrl, setNewUrl] = useState<string>('');
-  const [urlError, setUrlError] = useState<string | undefined>('');
+  const [newUrl, setNewUrl] = useState<string>("");
+  const [urlError, setUrlError] = useState<string | undefined>("");
   const [isValidating, setIsValidating] = useState<boolean>(false);
-    
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         closePopup();
       }
-      if (event.key === 'Enter') {
+      if (event.key === "Enter") {
         handleSubmitUrl();
       }
     };
@@ -32,75 +32,78 @@ const PopupForm = ({showPopup, onNewEntry, onClosePopup}: PopupFormProps) => {
         closePopup();
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   });
 
   const closePopup = () => {
     onClosePopup();
-    setNewUrl('');
-    setUrlError('');
+    setNewUrl("");
+    setUrlError("");
     setIsValidating(false);
   };
 
   const handleSubmitUrl = async () => {
     if (!newUrl.trim()) {
-      setUrlError('URL is required');
+      setUrlError("URL is required");
       return;
     }
 
     setIsValidating(true);
-    setUrlError('');
+    setUrlError("");
 
     try {
       const validation = validateUrl(newUrl.trim());
-      
+
       if (!validation.isValid) {
         setUrlError(validation.error);
         setIsValidating(false);
         return;
       }
 
-      // TODO call backend to store data and analyse 
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // TODO call backend to store data and analyse
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       const newEntry = {
         url: validation.url,
-        status: 'Queued',
+        status: "Queued",
       };
 
       // add to table rows
       onNewEntry(newEntry);
       closePopup();
-      console.log('URL added successfully:', validation.url);
+      console.log("URL added successfully:", validation.url);
     } catch (error) {
-      setUrlError('Failed to add URL. Please try again.');
-      console.error('Error adding URL:', error);
+      setUrlError("Failed to add URL. Please try again.");
+      console.error("Error adding URL:", error);
     } finally {
       setIsValidating(false);
     }
   };
 
-  const validateUrl = (url: string) => {   
+  const validateUrl = (url: string) => {
     try {
       const newUrl = new URL(url);
-      if( newUrl.protocol === 'http:' || newUrl.protocol === 'https:'){
+      if (newUrl.protocol === "http:" || newUrl.protocol === "https:") {
         return { isValid: true, url };
       }
-      return { isValid: false, error: 'Invalid URL format' };
+      return { isValid: false, error: "Invalid URL format" };
     } catch (err) {
-        console.log('Error', err)
-        return { isValid: false, error: 'Invalid URL format' };
+      console.log("Error", err);
+      return { isValid: false, error: "Invalid URL format" };
     }
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center p-4 z-50" >
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full" ref={popupRef}>
+    <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+      <div
+        className="bg-white rounded-lg shadow-xl max-w-md w-full"
+        ref={popupRef}
+      >
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-900">Add New URL</h3>
           <button
@@ -111,7 +114,7 @@ const PopupForm = ({showPopup, onNewEntry, onClosePopup}: PopupFormProps) => {
             <X className="h-5 w-5" />
           </button>
         </div>
-        
+
         <div className="p-6">
           <div className="mb-7">
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -122,11 +125,11 @@ const PopupForm = ({showPopup, onNewEntry, onClosePopup}: PopupFormProps) => {
               value={newUrl}
               onChange={(e) => {
                 setNewUrl(e.target.value);
-                setUrlError('');
+                setUrlError("");
               }}
               placeholder="https://example.com"
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                urlError ? 'border-red-500' : 'border-gray-300'
+                urlError ? "border-red-500" : "border-gray-300"
               }`}
               disabled={isValidating}
             />
@@ -157,7 +160,7 @@ const PopupForm = ({showPopup, onNewEntry, onClosePopup}: PopupFormProps) => {
                   Validating...
                 </>
               ) : (
-                'Add URL'
+                "Add URL"
               )}
             </button>
           </div>
