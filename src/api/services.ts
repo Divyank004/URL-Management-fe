@@ -33,3 +33,17 @@ export const postNewUrl = async (newEntry: URLAnalysisResult) => {
         body: JSON.stringify(newEntry),
         })
 }
+
+export const reRunAnalysis = async (jobId: string) => {
+    return await fetch(`${baseUrl}/analise/${jobId}`, {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+    });
+}
+
+export const getURLAnalysisResult = async (jobId: string) => {
+    return await fetch(`${baseUrl}/analysis/result/${jobId}`, {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+    });
+}

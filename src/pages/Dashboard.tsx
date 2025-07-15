@@ -7,14 +7,18 @@ import PopupForm from '../components/PopupForm'
 import type { URLAnalysisResult } from '../types';
 import type { TableColumn } from '../components/Table';
 import { postNewUrl, fetchAllURLsAnalysisData } from '../api/services';
+import { getURLAnalysisResult, reRunAnalysis } from '../api/services';
+
 
 const Dashboard = () => {
   const [data, setData] = useState<URLAnalysisResult[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [jobId, setJobId] = useState<string | null>(null);
+  
   const navigate = useNavigate();
-   
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -29,7 +33,11 @@ const Dashboard = () => {
       }
     };
     fetchData();
-  }, []);
+    if (jobId) {
+      const interval = setInterval(pollResult, 1000); // Poll every second
+      return () => clearInterval(interval);
+    }
+  }, [jobId]);
    
   const filteredURLData: URLAnalysisResult[] = data.filter(item =>
     item.url.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -40,8 +48,20 @@ const Dashboard = () => {
     console.log('delete id', id)
   };
 
-  const rerunURLAnalysis = (id) => {
+  const rerunURLAnalysis = async (id: number) => {
     console.log(`Rerunning analysis for ID: ${id}`);
+    try{
+      const response = await reRunAnalysis(id.toString());
+      if (response.ok) {
+        setJobId(id.toString());
+        alert('Analysis rerun initiated successfully.');
+      } else {
+        alert('Failed to rerun analysis. Please try again later.');
+      }
+    } catch (error) {
+      console.error('Error rerunning analysis:', error);
+      alert('Error rerunning analysis');
+    }
   };
 
   const openDetailsPage = (id: string) => {
@@ -52,10 +72,37 @@ const Dashboard = () => {
       alert('Analysis is not complete yet. Please wait until it is done.');
     } 
   }
-  
+
+const pollResult = async () => {
+    if (!jobId) return;
+    try {
+      const response = await getURLAnalysisResult(jobId);
+      if (!response.ok) {
+        throw new Error('Failed to fetch result');
+      }
+      const data = await response.json();
+      
+      if(data.status === 'Running') {
+        console.log('Analysis in progress:', data);
+        setData((prevData) => prevData.map(item => item.id === Number(jobId) ? data : item));
+        return;
+      }
+      
+      if (data.status === 'Done' || data.status === 'Failed') {
+        console.log('Polling result:', data);
+        setData((prevData) => prevData.map(item => item.id === Number(jobId) ? data : item));
+        console.log('polling completed:', data);
+        // Stop polling if job is done or failed
+        setJobId(null);
+      }
+    } catch (err) {
+      throw new Error('Failed to fetch result', err);
+    }
+  };
+
   interface TableRowActionsContext {
-  onDelete?: (id: number) => void;
-  onRerun?: (id: number) => void;
+    onDelete?: (id: number) => void;
+    onRerun?: (id: number) => void;
   }
 
   const columns: TableColumn<URLAnalysisResult, TableRowActionsContext>[] = [
@@ -159,6 +206,8 @@ const Dashboard = () => {
       if (response.ok) {
         const addedUrl: URLAnalysisResult = await response.json();
         setData((prevData) => [addedUrl, ...prevData]);
+        // trigger polling for the url analysis
+        setJobId(addedUrl.id.toString());
       } else {
         alert('Failed to add new URL');
       }
