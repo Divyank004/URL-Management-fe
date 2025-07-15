@@ -18,7 +18,7 @@ const LoginPage = () => {
         return;
       }
 
-      // Store token (consider HttpOnly cookie for better security)
+      // TODO Store token (consider HttpOnly cookie for better security)
       localStorage.setItem("authToken", data.token);
       navigate("/dashboard");
     } catch (err) {

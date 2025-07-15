@@ -81,6 +81,12 @@ const URLDetailPage = () => {
       ),
     },
   ];
+
+  const pieData = [
+    { name: "Internal Links", value: data?.internalLinks, color: "#10B981" },
+    { name: "External Links", value: data?.externalLinks, color: "#3B82F6" },
+  ];
+
   if (loading && !data) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -91,10 +97,6 @@ const URLDetailPage = () => {
       </div>
     );
   }
-  const pieData = [
-    { name: "Internal Links", value: data?.internalLinks, color: "#10B981" },
-    { name: "External Links", value: data?.externalLinks, color: "#3B82F6" },
-  ];
   return (
     data && (
       <div className="min-h-screen bg-gray-50 py-8">

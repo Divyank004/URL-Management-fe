@@ -4,11 +4,13 @@ An app where the user can login, add urls, view the urls in a table and run anal
 
 Userflow:
 
-- The user logs in
+- The user can log in (credentials shared in the mail)
 - Once logged in user can view list of urls with respective data in a table
 - User can add new URLs to the table
 - When Url is added a request is sent to the backend to run analysis on the URL.
 - When the analysis is done the URL info is updated in the table automatically using polling mechanism
+- User can search for specific URLs by typing in the search box
+- User can set how many rows the table can display per page
 - User can also rerun analysis by clicking rerun button in the url specific row
 - User can click on a specific row of a url to go to detailed page
 - The url detail page contains Pie chart comparing internal and external links, a table showing number of internal, external links and another table showing list of broken links with the error status code.
