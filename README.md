@@ -40,3 +40,13 @@ npm run lint
 ```bash
 npm run build
 ```
+
+### Troubleshooting
+
+If faced with Node version issues when running `npm run dev` or `yarn` commands
+Update node version to be >20.19
+
+```
+error when starting dev server:
+TypeError: crypto.hash is not a function
+```
