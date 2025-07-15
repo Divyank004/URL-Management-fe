@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router";
+import { loginService } from '../api/services';
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>('');
@@ -7,13 +8,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-        const res = await fetch('http://localhost:8080/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-        });
+        const res = await loginService({ email, password });
 
         const data = await res.json();
 

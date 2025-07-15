@@ -120,7 +120,7 @@ const Table = <T1, T2 = undefined>({rows, columns, unqieKeyInRows, rowClicked, s
                 {/* No Data */}
                 {paginatedRows.length === 0 && (
                     <div className="text-center py-12">
-                        <p className="text-gray-500">No Data found matching your search.</p>
+                        <p className="text-gray-500">No Data found.</p>
                     </div>
                 )}
             </div>

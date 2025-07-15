@@ -6,6 +6,7 @@ import { getStatusColor } from '../utils/getColorsCSS';
 import PopupForm from '../components/PopupForm'
 import type { URLAnalysisResult } from '../types';
 import type { TableColumn } from '../components/Table';
+import { fetchURLAnalysisData } from '../api/services';
 
 const Dashboard = () => {
   const [data, setData] = useState<URLAnalysisResult[]>([]);
@@ -13,207 +14,13 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const navigate = useNavigate();
-  
-  // TODO - fetch data from be
-  const urlData: URLAnalysisResult[] = [
-    {
-      id: 1,
-      url: 'https://example.com',
-      title: null,
-      htmlVersion: null,
-      internalLinks: null,
-      externalLinks: null,
-      status: 'Queued',
-      loginForm: null
-    },
-    {
-      id: 2,
-      url: 'https://google.com',
-      title: 'Google Search',
-      htmlVersion: 'HTML5',
-      internalLinks: 25,
-      externalLinks: 12,
-      status: 'Running',
-      loginForm: true
-    },
-    {
-      id: 3,
-      url: 'https://stackoverflow.com',
-      title: 'Stack Overflow',
-      htmlVersion: 'HTML5',
-      internalLinks: 35,
-      externalLinks: 15,
-      status: 'Done',
-      loginForm: true
-    },
-    {
-      id: 4,
-      url: 'https://reddit.com',
-      title: 'Reddit',
-      htmlVersion: 'HTML5',
-      internalLinks: 50,
-      externalLinks: 30,
-      status: 'Error',
-      loginForm: true
-    },
-    {
-      id: 5,
-      url: 'https://google.com',
-      title: 'Google Search',
-      htmlVersion: 'HTML5',
-      internalLinks: 25,
-      externalLinks: 12,
-      status: 'Running',
-      loginForm: true
-    },
-    {
-      id: 6,
-      url: 'https://stackoverflow.com',
-      title: 'Stack Overflow',
-      htmlVersion: 'HTML5',
-      internalLinks: 35,
-      externalLinks: 15,
-      status: 'Done',
-      loginForm: true
-    },
-    {
-      id: 7,
-      url: 'https://reddit.com',
-      title: 'Reddit',
-      htmlVersion: 'HTML5',
-      internalLinks: 50,
-      externalLinks: 30,
-      status: 'Error',
-      loginForm: true
-    },
-    {
-      id: 8,
-      url: 'https://google.com',
-      title: 'Google Search',
-      htmlVersion: 'HTML5',
-      internalLinks: 25,
-      externalLinks: 12,
-      status: 'Running',
-      loginForm: true
-    },
-    {
-      id: 9,
-      url: 'https://stackoverflow.com',
-      title: 'Stack Overflow',
-      htmlVersion: 'HTML5',
-      internalLinks: 35,
-      externalLinks: 15,
-      status: 'Done',
-      loginForm: true
-    },
-    {
-      id: 10,
-      url: 'https://reddit.com',
-      title: 'Reddit',
-      htmlVersion: 'HTML5',
-      internalLinks: 50,
-      externalLinks: 30,
-      status: 'Error',
-      loginForm: true
-    },
-    {
-      id: 11,
-      url: 'https://google.com',
-      title: 'Google Search',
-      htmlVersion: 'HTML5',
-      internalLinks: 25,
-      externalLinks: 12,
-      status: 'Running',
-      loginForm: true
-    },
-    {
-      id: 12,
-      url: 'https://stackoverflow.com',
-      title: 'Stack Overflow',
-      htmlVersion: 'HTML5',
-      internalLinks: 35,
-      externalLinks: 15,
-      status: 'Done',
-      loginForm: true
-    },
-    {
-      id: 13,
-      url: 'https://reddit.com',
-      title: 'Reddit',
-      htmlVersion: 'HTML5',
-      internalLinks: 50,
-      externalLinks: 30,
-      status: 'Error',
-      loginForm: true
-    },
-    {
-      id: 14,
-      url: 'https://google.com',
-      title: 'Google Search',
-      htmlVersion: 'HTML5',
-      internalLinks: 25,
-      externalLinks: 12,
-      status: 'Running',
-      loginForm: true
-    },
-    {
-      id: 15,
-      url: 'https://stackoverflow.com',
-      title: 'Stack Overflow',
-      htmlVersion: 'HTML5',
-      internalLinks: 35,
-      externalLinks: 15,
-      status: 'Done',
-      loginForm: true
-    },
-    {
-      id: 16,
-      url: 'https://reddit.com',
-      title: 'Reddit',
-      htmlVersion: 'HTML5',
-      internalLinks: 50,
-      externalLinks: 30,
-      status: 'Error',
-      loginForm: true
-    },
-    {
-      id: 17,
-      url: 'https://google.com',
-      title: 'Google Search',
-      htmlVersion: 'HTML5',
-      internalLinks: 25,
-      externalLinks: 12,
-      status: 'Running',
-      loginForm: true
-    },
-    {
-      id: 18,
-      url: 'https://stackoverflow.com',
-      title: 'Stack Overflow',
-      htmlVersion: 'HTML5',
-      internalLinks: 35,
-      externalLinks: 15,
-      status: 'Done',
-      loginForm: true
-    },
-    {
-      id: 19,
-      url: 'https://reddit.com',
-      title: 'Reddit',
-      htmlVersion: 'HTML5',
-      internalLinks: 50,
-      externalLinks: 30,
-      status: 'Error',
-      loginForm: true
-    }
-  ];
    
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        // TODO - Fetch data from backend 
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        setLoading(true); 
+        const response = await fetchURLAnalysisData();
+        const urlData: URLAnalysisResult[] = response.ok ? await response.json() : [];
         setData(urlData);
       } catch (error) {
         console.error('Error fetching data:', error);
