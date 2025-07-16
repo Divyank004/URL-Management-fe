@@ -51,7 +51,7 @@ const URLDetailPage = () => {
           onClick={(e) => e.stopPropagation()}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 hover:underline"
+          className="text-purple-400 hover:underline"
         >
           {row.url}
         </a>
@@ -99,23 +99,23 @@ const URLDetailPage = () => {
   }
   return (
     data && (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-gray-50 py-8 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="mb-6">
-            <button className="flex items-center text-blue-600 hover:text-blue-800 mb-4">
+          <div className="mb-6 ">
+            <button className="flex items-center text-gray-400 hover:text-gray-200 mb-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
               <Link to="/dashboard">Back to Table</Link>
             </button>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <div className=" rounded-lg shadow-sm p-6 bg-white/10 backdrop-blur-lg border-b border-white/20">
+              <h1 className="text-2xl font-bold text-gray-200 mb-2">
                 {data.title}
               </h1>
               <a
                 href={data.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800 hover:underline flex items-center"
+                className="text-pink-500 hover:underline flex items-center"
               >
                 {data.url}
                 <ExternalLink className="h-4 w-4 ml-1" />
@@ -126,7 +126,7 @@ const URLDetailPage = () => {
                 >
                   {data.status}
                 </span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-200">
                   HTML Version: {data.htmlVersion}
                 </span>
               </div>
@@ -135,8 +135,8 @@ const URLDetailPage = () => {
 
           {/* Pie Chart and Statistics */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 bg-white/10 backdrop-blur-lg border-b border-white/20">
+              <h2 className="text-xl font-semibold text-gray-200  mb-4">
                 Links Overview
               </h2>
               <div className="h-80">
@@ -161,25 +161,25 @@ const URLDetailPage = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 bg-white/10 backdrop-blur-lg border-b border-white/20">
+              <h2 className="text-xl font-semibold text-gray-200  mb-4">
                 Statistics
               </h2>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total Internal Links</span>
-                  <span className="font-semibold text-gray-900">
+                  <span className="text-gray-200 ">Total Internal Links</span>
+                  <span className="font-semibold text-gray-200 ">
                     {data.internalLinks}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total External Links</span>
-                  <span className="font-semibold text-gray-900">
+                  <span className="text-gray-200 ">Total External Links</span>
+                  <span className="font-semibold text-gray-200 ">
                     {data.externalLinks}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Broken Internal Links</span>
+                  <span className="text-gray-200 ">Broken Internal Links</span>
                   <span className="font-semibold text-red-600">
                     {data.brokenLinks &&
                       data.brokenLinks.filter(
@@ -188,7 +188,7 @@ const URLDetailPage = () => {
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Broken External Links</span>
+                  <span className="text-gray-200 ">Broken External Links</span>
                   <span className="font-semibold text-red-600">
                     {data.brokenLinks &&
                       data.brokenLinks.filter(
@@ -201,9 +201,9 @@ const URLDetailPage = () => {
           </div>
 
           {/* Broken Links Table */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-900">
+          <div className="border-b border-white/20 rounded-lg shadow-sm border border-gray-200">
+            <div className="px-6 py-4 ">
+              <h2 className="text-xl font-semibold text-gray-200">
                 Broken Links
               </h2>
             </div>
