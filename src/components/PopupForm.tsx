@@ -96,16 +96,16 @@ const PopupForm = ({ showPopup, onNewEntry, onClosePopup }: PopupFormProps) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
       <div
-        className="bg-white rounded-lg shadow-xl max-w-md w-full"
+        className="shadow-xl bg-white/10 backdrop-blur-lg rounded-xl shadow-2xl max-w-md w-full border border-white/20 "
         ref={popupRef}
       >
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Add New URL</h3>
+        <div className="flex items-center justify-between p-6 border-b border-white/20">
+          <h3 className="text-lg font-semibold text-white">Add New URL</h3>
           <button
             onClick={closePopup}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 hover:text-white"
             disabled={isValidating}
           >
             <X className="h-5 w-5" />
@@ -114,7 +114,7 @@ const PopupForm = ({ showPopup, onNewEntry, onClosePopup }: PopupFormProps) => {
 
         <div className="p-6">
           <div className="mb-7">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               URL
             </label>
             <input
@@ -125,7 +125,7 @@ const PopupForm = ({ showPopup, onNewEntry, onClosePopup }: PopupFormProps) => {
                 setUrlError("");
               }}
               placeholder="https://example.com"
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              className={`w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
                 urlError ? "border-red-500" : "border-gray-300"
               }`}
               disabled={isValidating}
@@ -141,14 +141,14 @@ const PopupForm = ({ showPopup, onNewEntry, onClosePopup }: PopupFormProps) => {
           <div className="flex justify-end space-x-3">
             <button
               onClick={closePopup}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="px-4 py-2 text-sm font-medium text-gray-300 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-all duration-200"
               disabled={isValidating}
             >
               Cancel
             </button>
             <button
               onClick={handleSubmitUrl}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200"
               disabled={isValidating}
             >
               {isValidating ? (
