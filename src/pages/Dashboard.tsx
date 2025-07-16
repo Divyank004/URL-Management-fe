@@ -121,7 +121,7 @@ const Dashboard = () => {
           onClick={(e) => e.stopPropagation()}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-600 hover:underline"
+          className="text-purple-400 hover:underline"
         >
           {row.url}
         </a>
@@ -131,16 +131,14 @@ const Dashboard = () => {
       name: "title",
       label: "Title",
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">
-          {row.title || "-"}
-        </div>
+        <div className="text-sm font-medium text-white">{row.title || "-"}</div>
       ),
     },
     {
       name: "htmlVersion",
       label: "HTML Version",
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">
+        <div className="text-sm font-medium text-white">
           {row.htmlVersion || "-"}
         </div>
       ),
@@ -149,7 +147,7 @@ const Dashboard = () => {
       name: "internalLinks",
       label: "Internal Links",
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">
+        <div className="text-sm font-medium text-white">
           {row.internalLinks ?? "-"}
         </div>
       ),
@@ -158,7 +156,7 @@ const Dashboard = () => {
       name: "externalLinks",
       label: "External Links",
       render: (row) => (
-        <div className="text-sm font-medium text-gray-900">
+        <div className="text-sm font-medium text-white">
           {row.externalLinks ?? "-"}
         </div>
       ),
@@ -184,7 +182,7 @@ const Dashboard = () => {
               e.stopPropagation();
               onDelete?.(row.id);
             }}
-            className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
+            className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50 cursor-pointer"
             title="Delete"
           >
             <Trash2 className="h-4 w-4" />
@@ -194,7 +192,7 @@ const Dashboard = () => {
               e.stopPropagation();
               onRerun?.(row.id);
             }}
-            className="text-blue-600 hover:text-blue-800 px-3 py-1 text-sm border border-blue-600 rounded hover:bg-blue-50"
+            className="text-center px-2 py-1 sm:px-3 text-sm font-medium bg-white/10 border border-white/20  text-white rounded-md shadow-sm hover:bg-white/30  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             title="Rerun"
           >
             <RotateCcw className="h-4 w-4 inline mr-1" />
@@ -234,12 +232,12 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-full bg-white-150 py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 ">
+    <div className="min-h-screen  bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-8 mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="rounded-lg border border-white/20 shadow-2xl ">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h1 className="text-center text-2xl font-bold text-gray-900">
+        <div className="bg-white/10 backdrop-blur-lg px-6 py-4 border-b border-white/20">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ">
+            <h1 className="text-center text-white text-2xl font-bold">
               URL Management
             </h1>
             <div className="relative">
@@ -249,14 +247,14 @@ const Dashboard = () => {
                 placeholder="Search URLs or titles..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-transparent w-full sm:w-80"
+                className="pl-10 pr-4 py-2 text-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-transparent w-full sm:w-80"
               />
               {searchTerm && (
                 <button
                   className="absolute right-3 top-3"
                   onClick={() => setSearchTerm("")}
                 >
-                  <X className="h-5 w-5"></X>
+                  <X className="h-5 w-5" color="white"></X>
                 </button>
               )}
             </div>

@@ -11,12 +11,14 @@ export const getStatusCodeColor = (statusCode: number): string => {
 export const getStatusColor = (status: string): string => {
   switch (status) {
     case "Queued":
-      return "text-orange-600 bg-orange-100";
+      return "text-blue-800 bg-blue-100";
     case "Running":
-      return "text-green-600 bg-green-100";
+      return "text-yellow-800 bg-yellow-100";
     case "Error":
-      return "text-red-600 bg-red-100";
+      return "text-red-800 bg-red-100";
+    case "Done":
+      return "text-green-800 bg-green-100";
     default:
-      return "text-gray-600 bg-gray-100";
+      return "text-gray-800 bg-gray-100";
   }
 };
