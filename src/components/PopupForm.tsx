@@ -65,9 +65,6 @@ const PopupForm = ({ showPopup, onNewEntry, onClosePopup }: PopupFormProps) => {
         return;
       }
 
-      // TODO call backend to store data and analyse
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       const newEntry = {
         url: validation.url,
         status: "Queued",

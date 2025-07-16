@@ -6,7 +6,7 @@ export interface URLAnalysisResult {
   internalLinks: number | null;
   externalLinks: number | null;
   status: "Queued" | "Running" | "Done" | "Error";
-  loginForm?: boolean | null;
+  loginForm: boolean | null;
   validFrom: string;
   validUntil: string;
 }

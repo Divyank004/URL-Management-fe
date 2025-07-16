@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Trash2, RotateCcw } from "lucide-react";
+import { Search, Trash2, RotateCcw, X } from "lucide-react";
 import { useNavigate } from "react-router";
 import Table from "../components/Table";
 import { getStatusColor } from "../utils/getColorsCSS";
@@ -251,6 +251,14 @@ const Dashboard = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-transparent w-full sm:w-80"
               />
+              {searchTerm && (
+                <button
+                  className="absolute right-3 top-3"
+                  onClick={() => setSearchTerm("")}
+                >
+                  <X className="h-5 w-5"></X>
+                </button>
+              )}
             </div>
           </div>
         </div>
