@@ -79,7 +79,7 @@ const Table = <T1, T2 = undefined>({
 
   return (
     <div className="w-full bg-white/10 backdrop-blur-lg">
-      <div className="bg-white/10 h-80 sm:h-100 md:h-120 lg:h-140 max-h-full md:max-h-screen overflow-y-auto">
+      <div className="bg-white/10 h-80 sm:h-90 md:h-100 lg:h-120 max-h-full md:max-h-screen overflow-y-auto">
         <table className="min-w-full ">
           <thead className="bg-gray-700 sticky top-0 z-10">
             <tr>
