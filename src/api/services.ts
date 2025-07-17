@@ -47,3 +47,10 @@ export const getURLAnalysisResult = async (jobId: string) => {
     headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
   });
 };
+
+export const deleteURL = async (rowId: number) => {
+  return await fetch(`${baseUrl}/urldata/${rowId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` },
+  });
+};

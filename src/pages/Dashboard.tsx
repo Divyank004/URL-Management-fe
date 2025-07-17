@@ -8,6 +8,7 @@ import type { URLAnalysisResult } from "../types";
 import type { TableColumn } from "../components/Table";
 import { postNewUrl, fetchAllURLsAnalysisData } from "../api/services";
 import { getURLAnalysisResult, reRunAnalysis } from "../api/services";
+import { deleteURL } from "../api/services";
 
 const Dashboard = () => {
   const [data, setData] = useState<URLAnalysisResult[]>([]);
@@ -46,8 +47,19 @@ const Dashboard = () => {
       item.title?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const deleteSelectedRow = (id) => {
-    console.log("delete id", id);
+  const deleteSelectedRow = async (rowId: number) => {
+    try {
+      const response = await deleteURL(rowId);
+      if (response.ok) {
+        setData((prevData) => prevData.filter((item) => item.id !== rowId));
+        alert("URL deleted successfully.");
+      } else {
+        alert("Failed to delete URL. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error deleting URL:", error);
+      alert("Error deleting URL");
+    }
   };
 
   const rerunURLAnalysis = async (id: number) => {
