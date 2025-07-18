@@ -1,11 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { X, AlertTriangle } from "lucide-react";
-
-interface PopupFormProps {
-  showPopup: boolean;
-  onNewEntry: (newEntry: any) => void;
-  onClosePopup: () => void;
-}
+import type { PopupFormProps } from "../types";
 
 const PopupForm = ({ showPopup, onNewEntry, onClosePopup }: PopupFormProps) => {
   const popupRef = useRef<HTMLDivElement>(null);

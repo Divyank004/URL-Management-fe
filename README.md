@@ -4,7 +4,7 @@ An app where the user can login, add urls, view the urls in a table and run anal
 
 Userflow:
 
-- The user can log in (credentials shared in the mail)
+- The user can log in
 - Once logged in user can view list of urls with respective data in a table
 - User can add new URLs to the table
 - When Url is added a request is sent to the backend to run analysis on the URL.

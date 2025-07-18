@@ -1,22 +1,11 @@
+import Table from "../components/Table";
 import { useParams, Link } from "react-router";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { getStatusCodeColor, getStatusColor } from "../utils/getColorsCSS";
-import Table from "../components/Table";
-import type { TableColumn } from "../components/Table";
-import type { URLAnalysisResult } from "../types";
 import { fetchSingleURLAnalysisData } from "../api/services";
 import { useEffect, useState } from "react";
-
-interface BrokenLink {
-  url: string;
-  statusCode: number;
-  type: "internal" | "external";
-}
-
-interface URLDataWithBrokenLink extends URLAnalysisResult {
-  brokenLinks: BrokenLink[];
-}
+import type { BrokenLink, URLDataWithBrokenLink, TableColumn } from "../types";
 
 const URLDetailPage = () => {
   const { id } = useParams();

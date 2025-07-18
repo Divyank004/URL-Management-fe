@@ -1,21 +1,20 @@
+import Table from "../components/Table";
+import PopupForm from "../components/PopupForm";
+import { useNavigate } from "react-router";
+import { deleteURL } from "../api/services";
+import { getStatusColor } from "../utils/getColorsCSS";
 import { useState, useEffect } from "react";
 import { Search, Trash2, RotateCcw, X, LogOut, User } from "lucide-react";
-import { useNavigate } from "react-router";
-import Table from "../components/Table";
-import { getStatusColor } from "../utils/getColorsCSS";
-import PopupForm from "../components/PopupForm";
-import type { URLAnalysisResult } from "../types";
-import type { TableColumn } from "../components/Table";
 import { postNewUrl, fetchAllURLsAnalysisData } from "../api/services";
 import { getURLAnalysisResult, reRunAnalysis } from "../api/services";
-import { deleteURL } from "../api/services";
+import type { URLAnalysisResult, TableColumn } from "../types";
 
 const Dashboard = () => {
   const [data, setData] = useState<URLAnalysisResult[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [jobId, setJobId] = useState<string | null>(null);
+  const [crawlJobId, setCrawlJobId] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -35,11 +34,11 @@ const Dashboard = () => {
       }
     };
     fetchData();
-    if (jobId) {
+    if (crawlJobId) {
       const interval = setInterval(pollResult, 1000); // Poll every second
       return () => clearInterval(interval);
     }
-  }, [jobId]);
+  }, [crawlJobId]);
 
   const filteredURLData: URLAnalysisResult[] = data.filter(
     (item) =>
@@ -67,7 +66,7 @@ const Dashboard = () => {
     try {
       const response = await reRunAnalysis(id.toString());
       if (response.ok) {
-        setJobId(id.toString());
+        setCrawlJobId(id.toString());
         alert("Analysis rerun initiated successfully.");
       } else {
         alert("Failed to rerun analysis. Please try again later.");
@@ -88,9 +87,9 @@ const Dashboard = () => {
   };
 
   const pollResult = async () => {
-    if (!jobId) return;
+    if (!crawlJobId) return;
     try {
-      const response = await getURLAnalysisResult(jobId);
+      const response = await getURLAnalysisResult(crawlJobId);
       if (!response.ok) {
         throw new Error("Failed to fetch result");
       }
@@ -99,7 +98,9 @@ const Dashboard = () => {
       if (data.status === "Running") {
         console.log("Analysis in progress:", data);
         setData((prevData) =>
-          prevData.map((item) => (item.id === Number(jobId) ? data : item)),
+          prevData.map((item) =>
+            item.id === Number(crawlJobId) ? data : item,
+          ),
         );
         return;
       }
@@ -107,11 +108,13 @@ const Dashboard = () => {
       if (data.status === "Done" || data.status === "Failed") {
         console.log("Polling result:", data);
         setData((prevData) =>
-          prevData.map((item) => (item.id === Number(jobId) ? data : item)),
+          prevData.map((item) =>
+            item.id === Number(crawlJobId) ? data : item,
+          ),
         );
         console.log("polling completed:", data);
         // Stop polling if job is done or failed
-        setJobId(null);
+        setCrawlJobId(null);
       }
     } catch (err) {
       throw new Error("Failed to fetch result", err);
@@ -218,10 +221,12 @@ const Dashboard = () => {
   function handleProfile() {
     alert("Profile feature is not implemented yet.");
   }
+
   function handleLogout() {
     localStorage.removeItem("authToken");
     navigate("/");
   }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -240,7 +245,7 @@ const Dashboard = () => {
         const addedUrl: URLAnalysisResult = await response.json();
         setData((prevData) => [addedUrl, ...prevData]);
         // trigger polling for the url analysis
-        setJobId(addedUrl.id.toString());
+        setCrawlJobId(addedUrl.id.toString());
       } else {
         alert("Failed to add new URL");
       }

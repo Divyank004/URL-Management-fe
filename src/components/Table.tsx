@@ -5,33 +5,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import type { TableProps } from "../types";
 import isObjNullOrUndefined from "../utils/isObjNullOrUndefined";
-
-export interface TableColumn<T1, T2 = undefined> {
-  name: string;
-  label: string;
-  render?: (row: T1, rowActions: T2) => React.ReactNode;
-}
-
-interface TableProps<T1, T2 = undefined> {
-  rows: T1[];
-  columns: TableColumn<T1, T2>[];
-  unqieKeyInRows: string;
-  rowClicked?: (uniqueKeyInRow: string) => void;
-  showCheckbox?: boolean;
-  rowActions?: T2;
-  pagination?: {
-    defaultPageSize?: number;
-    pageSizeOptions: number[];
-  };
-  footer?: {
-    buttonOne: {
-      title: string;
-      className: string;
-      onAddUrl: () => void;
-    };
-  };
-}
 
 const Table = <T1, T2 = undefined>({
   rows = [],
@@ -52,9 +27,9 @@ const Table = <T1, T2 = undefined>({
   const paginatedRows = useMemo(() => {
     if (!isObjNullOrUndefined(pagination)) {
       const start = pageIndex * pageSize;
-      return rows.slice(start, start + pageSize);
+      return [...new Set(rows.slice(start, start + pageSize))];
     } else {
-      return rows;
+      return [...new Set(rows)];
     }
   }, [rows, pageIndex, pageSize, pagination]);
 
@@ -67,7 +42,7 @@ const Table = <T1, T2 = undefined>({
       setSelectedRows(new Set(rows.map((item) => item[unqieKeyInRows])));
     }
   };
-  const rowSelected = (id) => {
+  const rowSelected = (id: T1) => {
     const newSelected = new Set(selectedRows);
     if (newSelected.has(id)) {
       newSelected.delete(id);
