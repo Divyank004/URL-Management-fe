@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Trash2, RotateCcw, X } from "lucide-react";
+import { Search, Trash2, RotateCcw, X, LogOut, User } from "lucide-react";
 import { useNavigate } from "react-router";
 import Table from "../components/Table";
 import { getStatusColor } from "../utils/getColorsCSS";
@@ -8,6 +8,7 @@ import type { URLAnalysisResult } from "../types";
 import type { TableColumn } from "../components/Table";
 import { postNewUrl, fetchAllURLsAnalysisData } from "../api/services";
 import { getURLAnalysisResult, reRunAnalysis } from "../api/services";
+import { deleteURL } from "../api/services";
 
 const Dashboard = () => {
   const [data, setData] = useState<URLAnalysisResult[]>([]);
@@ -46,8 +47,19 @@ const Dashboard = () => {
       item.title?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const deleteSelectedRow = (id) => {
-    console.log("delete id", id);
+  const deleteSelectedRow = async (rowId: number) => {
+    try {
+      const response = await deleteURL(rowId);
+      if (response.ok) {
+        setData((prevData) => prevData.filter((item) => item.id !== rowId));
+        alert("URL deleted successfully.");
+      } else {
+        alert("Failed to delete URL. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error deleting URL:", error);
+      alert("Error deleting URL");
+    }
   };
 
   const rerunURLAnalysis = async (id: number) => {
@@ -203,6 +215,13 @@ const Dashboard = () => {
     },
   ];
 
+  function handleProfile() {
+    alert("Profile feature is not implemented yet.");
+  }
+  function handleLogout() {
+    localStorage.removeItem("authToken");
+    navigate("/");
+  }
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -232,14 +251,49 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen  bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-8 mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900  mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Top Header */}
+      <header className="bg-white/10 backdrop-blur-lg border-b border-white/20 sticky z-50 mb-8">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo/Brand */}
+            <div className="flex items-center">
+              <h1 className="text-xl font-bold text-white">URL Management</h1>
+            </div>
+
+            {/* Right side buttons */}
+            <div className="flex items-center space-x-3">
+              {/* Profile Button */}
+              <button
+                onClick={handleProfile}
+                className="flex items-center space-x-2 px-3 py-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <div className="h-8 w-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                  <User className="h-4 w-4 text-white" />
+                </div>
+                <span className="hidden sm:block text-sm font-medium">
+                  Divyank Dhadi
+                </span>
+              </button>
+
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="flex items-center space-x-2 px-3 py-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:block text-sm font-medium">
+                  Logout
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
       <div className="rounded-lg border border-white/20 shadow-2xl ">
         {/* Header */}
         <div className="bg-white/10 backdrop-blur-lg px-6 py-4 border-b border-white/20">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ">
-            <h1 className="text-center text-white text-2xl font-bold">
-              URL Management
-            </h1>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <input
